@@ -1,0 +1,76 @@
+testbed:
+
+  name: hemp_default_bIvLZL
+
+  tacacs:
+      username: "%ENV{PYATS_USERNAME}"
+  passwords:
+      tacacs: "%ENV{PYATS_PASSWORD}"
+      enable: "%ENV{PYATS_AUTH_PASS}"
+      line: "%ENV{PYATS_PASSWORD}"
+
+devices:
+
+  partner1:
+    alias: uut
+    os: iosxe
+    type: CSR1000v
+    connections:
+
+      defaults:
+        class: unicon.Unicon
+      console:
+        ip: 10.94.241.194
+        protocol: telnet
+        port: 17005
+    custom:
+      abstraction:
+        order: [os, type]
+
+  partner2:
+    alias: partner2
+    os: iosxe
+    type: CSR1000v
+    connections:
+
+      defaults:
+        class: unicon.Unicon
+      console:
+        ip: 10.94.241.194
+        protocol: telnet
+        port: 17007
+    custom:
+      abstraction:
+        order: [os, type]
+
+topology:
+  partner2:
+    interfaces:
+      GigabitEthernet3:
+        ipv4: 172.16.0.34/30
+        link: host2-to-partner2
+        type: ethernet
+      GigabitEthernet2:
+        ipv4: 172.16.0.14/30
+        link: internet-to-partner2
+        type: ethernet
+      GigabitEthernet1:
+        ipv4: 10.94.241.253/27
+        link: flat
+        type: ethernet
+
+  partner1:
+    interfaces:
+      GigabitEthernet3:
+        ipv4: 172.16.0.30/30
+        link: host1-to-partner1
+        type: ethernet
+      GigabitEthernet2:
+        ipv4: 172.16.0.10/30
+        link: internet-to-partner1
+        type: ethernet
+      GigabitEthernet1:
+        ipv4: 10.94.241.250/27
+        link: flat
+        type: ethernet
+  

@@ -1,0 +1,16 @@
+# validate this
+DEVICE_IP: 10.251.255.209
+OSPF_PROCESS: 1
+OSPF_AREA: 0.0.0.0
+PEERING_INTERFACE: GigabitEthernet2
+PEER_ROUTER_ID: 172.16.2.1
+
+
+# if validation fails delete this route
+ROUTE_CIDR: 4.4.4.0/24
+# from this org/network
+MERAKI_ORG_ID: 626279
+NETWORK_ID: N_664280945037230359
+
+# using this token
+MERAKI_API_KEY: foobar

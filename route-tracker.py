@@ -7,7 +7,7 @@ import ipyats.tasks as tasks
 
 OSPF_PROCESS = "1"
 EXPECTED_INTERFACE = "GigabitEthernet2"
-OSPF_AREA="0.0.0.0"
+OSPF_AREA = "0.0.0.0"
 
 
 def check_for_neighbor(ospf_data,
@@ -59,8 +59,6 @@ def main():
                 banner("Successfully verified neighbor {} is {}".format(nbr,
                                                                         state))
             )
-
-
         else:
             print(banner("Failed to verify neighbor, now what?"))
 
