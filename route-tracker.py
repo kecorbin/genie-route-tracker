@@ -2,7 +2,7 @@ import argparse
 from genie.conf import Genie
 from ats.topology import loader
 from ats.log.utils import banner
-import ipyats.tasks as tasks
+from genie.ops.base import get_ops
 
 
 OSPF_PROCESS = "1"
@@ -18,7 +18,7 @@ def check_for_neighbor(ospf_data,
                        vrf='default'):
 
     try:
-        vrf_data = ospf_data["vrf"][vrf]
+        vrf_data = ospf_data.info["vrf"][vrf]
         instance = vrf_data['address_family']['ipv4']['instance'][str(proc)]
         area = instance['areas'][area]
         intf = area['interfaces'][intf]
@@ -50,9 +50,27 @@ def main():
 
         # pyats testbed != genie testbed
         testbed = Genie.init(args.testbed)
-        uut = testbed.devices['uut']
-        ospf = tasks.learn('ospf', uut)
         nbr = args.neighbor
+
+        uut = testbed.devices['uut']
+        uut.connect()
+
+        # Retrieve Ospf Class for this device
+        ospf_cls = get_ops('ospf', uut)
+        # Instantiate the class, and provides some attributes
+        # Attributes limit the # of clis to use;
+        # It will only learn the neighbors,  nothing else.
+        ospf = ospf_cls(uut,
+                        attributes=['info[vrf][(.*)][address_family][ipv4]'
+                                    '[instance][{OSPF_PROCESS}]'
+                                    '[areas][{OSPF_AREA}]'
+                                    '[interfaces][{EXPECTED_INTERFACE}]'
+                                    '[neighbors][(.*)]'\
+                                            .format(OSPF_PROCESS=OSPF_PROCESS,
+                                                    OSPF_AREA=OSPF_AREA,
+                                                    EXPECTED_INTERFACE=EXPECTED_INTERFACE)])
+        ospf.learn()
+
         state = check_for_neighbor(ospf, nbr)
         if state:
             print(
