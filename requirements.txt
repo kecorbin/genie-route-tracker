@@ -12,7 +12,7 @@ genie.harness==3.1.2
 genie.libs.conf==3.1.1
 genie.libs.filetransferutils==3.1.0
 genie.libs.ops==3.1.2
-genie.libs.parser==3.1.10
+genie.libs.parser==3.1.11
 genie.libs.sdk==3.1.4
 genie.libs.telemetry==3.1.0
 genie.metaparser==3.1.0
