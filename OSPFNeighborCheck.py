@@ -96,7 +96,7 @@ class NeighborTest(aetest.Testcase):
 
 
 class Recovery(aetest.Testcase):
-    """Recover from failure scenario, this testcase is skipped if 
+    """Recover from failure scenario, this testcase is skipped if
     NeighborTest suceeds"""
 
     @aetest.test

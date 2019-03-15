@@ -1,0 +1,45 @@
+version: '3'
+services:
+
+  webui:
+    image: portainer/portainer
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+
+  router1:
+    build: .
+    restart: always
+    command:
+      - /scripts/ospf_checker.sh
+    volumes:
+      - ./router1.yaml:/scripts/default_testbed.yaml
+    env_file:
+      - ./.envfile
+    environment:
+      - ROUTER_NAME=router1
+
+  router2:
+    build: .
+    restart: always
+    command:
+      - /scripts/ospf_checker.sh
+    volumes:
+      - ./router2.yaml:/scripts/default_testbed.yaml
+    env_file:
+      - ./.envfile
+    environment:
+      - ROUTER_NAME=router2
+
+
+  # scheduler:
+  #   image: mcuadros/ofelia:latest
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - ./ofelia.ini:/etc/ofelia/config.ini
