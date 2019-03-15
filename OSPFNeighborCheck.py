@@ -21,22 +21,22 @@ class common_setup(aetest.CommonSetup):
 
         genie_testbed = Genie.init(testbed)
         self.parent.parameters['testbed'] = genie_testbed
-        genie_testbed.devices['uut'].connect()
+        uut = genie_testbed.devices['uut']
+        uut.connect()
 
 
-# @aetest.processors(post = [send_message])
 class NeighborTest(aetest.Testcase):
     """Check for the existence of a route, perform recovery action if route
     is not present"""
 
     @aetest.test
-    def collect_ospf_info(self,
-                          testbed,
-                          ospf_process,
-                          ospf_area,
-                          expected_interface):
+    def collect_ospf_info(self, testbed):
         uut = testbed.devices['uut']
 
+        nbr_details = uut.custom['expected_ospf_neighbor']
+        ospf_process = nbr_details['ospf_process']
+        expected_interface = nbr_details['expected_interface']
+        ospf_area = nbr_details['ospf_area']
         # Retrieve Ospf Class for this device
         ospf_cls = get_ops('ospf', uut)
         # Instantiate the class, and provides some attributes
@@ -63,19 +63,19 @@ class NeighborTest(aetest.Testcase):
             self.failed("Could not collect OSPF information")
 
     @aetest.test
-    def check_for_neighbor(self,
-                           testbed,
-                           ospf_process,
-                           ospf_area,
-                           expected_interface,
-                           expected_neighbor,
-                           vrf):
+    def check_for_neighbor(self, testbed):
+        uut = testbed.devices['uut']
+        nbr_details = uut.custom['expected_ospf_neighbor']
+        ospf_process = nbr_details['ospf_process']
+        expected_interface = nbr_details['expected_interface']
+        expected_neighbor = nbr_details['expected_neighbor']
+        vrf = nbr_details['vrf']
+        ospf_area = nbr_details['ospf_area']
 
         try:
             ospf_data = self.parent.parameters['ospf_ops']
             vrf_data = ospf_data.info["vrf"][vrf]
-            instance = vrf_data['address_family']['ipv4']['instance']\
-                               [str(ospf_process)]
+            instance = vrf_data['address_family']['ipv4']['instance'][str(ospf_process)] # noqa
             area = instance['areas'][ospf_area]
             intf = area['interfaces'][expected_interface]
             nbrs = intf['neighbors']
@@ -96,7 +96,17 @@ class NeighborTest(aetest.Testcase):
 
 
 class Recovery(aetest.Testcase):
+    """Recover from failure scenario, this testcase is skipped if 
+    NeighborTest suceeds"""
+
     @aetest.test
     def perform_recovery_action(self):
-        print('running testcase test section')
-        self.failed("I failed!")
+        log.info('Starting Recovery Procedure')
+
+        recovered = False
+        # your recovery code here
+
+        if recovered:
+            self.passed('Looks like we saved the day')
+        else:
+            self.failed("Oops - didn't recover")

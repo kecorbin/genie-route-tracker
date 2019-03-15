@@ -19,8 +19,11 @@ pip install -r requirements.txt
 
 ## Docker instructions
 
-
 ```
-docker build -t route-checker .
-docker run -ti route-checker /bin/sh
+docker build -t rt .
+docker run -ti \
+           -v $(pwd)/router2.yaml:/scripts/default_testbed.yaml \
+           --env-file .envfile \
+           rt \
+           /scripts/ospf_checker.sh
 ```
