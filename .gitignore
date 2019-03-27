@@ -3,6 +3,13 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+.virl/
+
+runinfo/
+archive/
+TaskLog.html
+.envfile
+
 # C extensions
 *.so
 

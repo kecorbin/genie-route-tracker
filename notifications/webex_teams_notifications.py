@@ -13,8 +13,10 @@ ch.setLevel(logging.INFO)
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
+
 token = os.getenv('SPARK_TOKEN')
 room_id = os.getenv('ROOM_ID')
+
 router_name = os.getenv('ROUTER_NAME')
 server_name = os.getenv('SERVER_NAME')
 url = "https://api.ciscospark.com/v1/messages"
@@ -90,13 +92,20 @@ def send_archive_zip():
 
 
 def main():
-
+    result = os.getenv('RESULT')
     if token and room_id:
-
-        send_html_report()
-        send_archive_zip()
+        pass
     else:
         exit("Token and Room ID not found in environment")
+
+    if result == "Passed":
+        logger.info('All Tests Passed, nothing to do')
+        exit(0)
+    else:
+        logger.info("Tests Failed Sending Webex Notifications")
+        send_html_report()
+        send_archive_zip()
+
 
 
 if __name__ == "__main__":

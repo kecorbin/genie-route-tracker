@@ -13,33 +13,15 @@ services:
       placement:
         constraints: [node.role == manager]
 
-  router1:
+  checker1:
     build: .
+    image: kecorbin/genie-neighbor-check
     restart: always
-    command:
-      - /scripts/ospf_checker.sh
+    # only supported for swarm
+    deploy:
+      restart_policy:
+        delay: 10s
     volumes:
-      - ./router1.yaml:/scripts/default_testbed.yaml
+      - ./testbed.yaml:/scripts/testbed.yaml
     env_file:
       - ./.envfile
-    environment:
-      - ROUTER_NAME=router1
-
-  router2:
-    build: .
-    restart: always
-    command:
-      - /scripts/ospf_checker.sh
-    volumes:
-      - ./router2.yaml:/scripts/default_testbed.yaml
-    env_file:
-      - ./.envfile
-    environment:
-      - ROUTER_NAME=router2
-
-
-  # scheduler:
-  #   image: mcuadros/ofelia:latest
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #     - ./ofelia.ini:/etc/ofelia/config.ini

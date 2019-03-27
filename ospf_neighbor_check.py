@@ -5,5 +5,5 @@ from pyats.easypy import run
 #   - it should have a runtime argument
 #   - and contains one or more tasks
 def main(runtime):
-    run(testscript='OSPFNeighborCheck.py',
+    run(testscript='tests/OSPFNeighborCheck.py',
         runtime=runtime)

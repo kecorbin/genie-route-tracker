@@ -1,31 +1,31 @@
-# genie-route-tracker
+# genie-neighbor-check
 
-## Requirements
+In various network topologies, a given device can have several "important" adjacencies.
 
-* python3
+Some sample scenarios:
+* an aggregation router should be adjacencies with core routers
+* leaves should have adjacencies with all spines
+* a branch location should have an adjacency with both data centers
 
-## Installation
+This project shows a sample of how we can accomplish this with pyATS and Genie.
 
+## Sample topology
+
+![Topology Diagram](./img/topology.png "Topology Diagram")
+
+## Testing Approach
+
+
+## Configuration
+
+To customize your installation
+## Getting Started
+
+To make things easier, the entire solution is described in [docker-compose.yaml](./docker-compose.yaml)
+
+To launch
 ```
-pip install -r requirements.txt
-```
-
-## Usage
-
-```
- python route-tracker.py --testbed default_testbed.yaml --neighbor 1.1.1.1
-```
-
-
-## Docker instructions
-
-```
-docker build -t rt .
-docker run -ti \
-           -v $(pwd)/router2.yaml:/scripts/default_testbed.yaml \
-           --env-file .envfile \
-           rt \
-           /scripts/ospf_checker.sh
+docker-compose build && docker-compose up
 ```
 
 
@@ -33,7 +33,5 @@ docker run -ti \
 
 To make getting the logs / consoles much easier - you should take a look at [portainer](https://github.com/portainer/portainer)
 
-```
-docker run -d -p 9000:9000 --name portainer --restart always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
-
-```
+The UI should be available at http://docker_host:9000/ make sure your firewall rules
+allow this communication
